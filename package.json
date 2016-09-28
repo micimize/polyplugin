@@ -1,0 +1,50 @@
+{
+  "name": "polyplugin",
+  "version": "0.2.0-alpha.4",
+  "description": "aims to provide context-driven code optimization and distribution for multiple environments",
+  "main": "./dist/index.js",
+  "bin": "./dist/cli.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel-core/register test/parser",
+    "dist": "./bootstrap.js --entry ./src/index.js --out ./dist/index.js --environments PRODUCTION , --contexts NODE",
+    "watch": "./bootstrap.js --entry ./src/index.js --out ./dist/index.js --environments PRODUCTION , --contexts NODE , --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polypacker/polyplugin.git"
+  },
+  "author": "Michael Joseph Rosenthal <rosenthalm93@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polypacker/polyplugin/issues"
+  },
+  "homepage": "https://github.com/polypacker/polyplugin#readme",
+  "dependencies": {
+    "babel-core": "^6.5.1",
+    "babel-loader": "6.2.0",
+    "babel-polyfill": "^6.8.0",
+    "babel-preset-es2015": "6.3.13",
+    "babel-preset-stage-0": "6.3.13",
+    "babel-register": "^6.8.0",
+    "colors": "^1.1.2",
+    "death": "^1.0.0",
+    "fs": "0.0.2",
+    "jargon-parser": "^0.0.2",
+    "json-loader": "^0.5.4",
+    "jsonpath-plus": "^0.15.0",
+    "read-json-sync": "^1.1.1"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "diff": "^2.2.3",
+    "generatorics": "^1.0.7",
+    "istanbul": "^0.4.4",
+    "mocha": "^3.0.1"
+  }
+}
