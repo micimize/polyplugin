@@ -66,3 +66,4 @@ function mergeObjects(objects){
 export function merge(...args){
   return (Array.isArray(args[0])) ? mergeArrays(args) : mergeObjects(args)
 }
+
