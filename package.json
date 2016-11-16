@@ -6,9 +6,8 @@
   "bin": "./dist/cli.js",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register test/parser",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "dist": "polypacker --entry ./src/index.js --out ./dist/index.js --environments PRODUCTION , --contexts NODE",
-    "watch": "polypacker --babelPresets flow , --entry ./src/index.js --out ./dist/index.js --environments PRODUCTION , --contexts NODE , --watch"
+    "watch": "polypacker --entry ./src/index.js --out ./dist/index.js --environments PRODUCTION , --contexts NODE , --watch"
   },
   "repository": {
     "type": "git",
@@ -42,10 +41,8 @@
     ]
   },
   "devDependencies": {
-    "babel-preset-flow": "^1.0.0",
     "chai": "^3.5.0",
     "diff": "^2.2.3",
-    "flow-bin": "^0.33.0",
     "generatorics": "^1.0.7",
     "istanbul": "^0.4.4",
     "mocha": "^3.0.1",
