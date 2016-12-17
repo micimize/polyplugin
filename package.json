@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "bin": "./dist/cli.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register test/parser",
+    "test": "ava",
     "dist": "polypacker --entry ./src/index.js --out ./dist/index.js --environments PRODUCTION , --contexts NODE",
     "watch": "polypacker --entry ./src/index.js --out ./dist/index.js --environments PRODUCTION , --contexts NODE , --watch"
   },
@@ -40,9 +40,25 @@
       "stage-0"
     ]
   },
+  "ava": {
+    "babel": "inherit"
+  },
+  "eslintConfig": {
+    "extends": "airbnb",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module"
+    }
+  },
   "devDependencies": {
+    "ava": "^0.17.0",
     "chai": "^3.5.0",
     "diff": "^2.2.3",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.8.0",
     "generatorics": "^1.0.7",
     "istanbul": "^0.4.4",
     "mocha": "^3.0.1",

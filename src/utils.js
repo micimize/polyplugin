@@ -1,15 +1,53 @@
-export function clone(obj) {
-  if (null == obj || "object" != typeof obj) return obj;
-  var copy = obj.constructor() || {}
-  for (var attr in obj) {
-    if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
-  }
-  return copy;
-}
+import meta from './meta'
 
-export function flatten(arrays){
-  return [].concat.apply([], arrays);
-}
+export const flatten = meta({
+  description: 'flattens an array of arrays that are nested 1 deep',
+  examples: [{
+    input: [ [['foo'], ['bar']] ],
+    output: ['foo', 'bar']
+  }]
+})(
+  function flatten(arrays){
+    return [].concat.apply([], arrays);
+  }
+)
+
+
+export const arrayify = meta({
+  description: 'wraps defined non-array elements in an array, always returns an array',
+  examples: [{
+    input: [ ['foo'] ],
+    output: ['foo']
+  }, {
+    input: [ 'foo' ],
+    output: ['foo']
+  }, {
+    input: [ undefined ],
+    output: []
+  }]
+})(
+  function arrayify(val){
+    return Array.isArray(val) ? val : (val !== undefined ? [val] : [])
+  }
+)
+
+
+export const clone = meta({
+  description: 'clone an object by reconstructing it into a copy and assigning all first-level attributes',
+  examples: [{
+    input: [{foo: 'foo'}],
+    output: {foo: 'foo'}
+  }]
+})(
+  function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor() || {}
+    for (var attr in obj) {
+      if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
+  }
+)
 
 function objectsAreEqual(a, b) {
   // Create arrays of property names
@@ -41,19 +79,30 @@ function values(obj){
   return Object.keys(obj).map(k => obj[k])
 }
 
-export function uniquify(list){
-  let objects = []
-  return values(list.reduce((map, item) => {
-    if(typeof(item) != 'object'){
-      return Object.assign(map, {[item]: item})
-    } else if(!objects.filter(o => objectsAreEqual(o, item)).length){
-      objects.push(item)
-      return Object.assign(map, {[item]: item})
-    } else {
-      return map
-    }
-  }, {}))
-}
+export const uniquify = meta({
+  description: 'remove dups form an array by comparing the literal data structures',
+  examples: [{
+    input: [['foo', 'bar', 'foo']],
+    output: ['foo', 'bar']
+  }, {
+    input: [[ {foo: 'foo'}, {bar: 'bar'}, {foo: 'foo'} ]],
+    output: [{foo: 'foo'}, {bar: 'bar'}]
+  }]
+})(
+  function uniquify(list){
+    let objects = []
+    list.forEach(item => {
+      if((
+        typeof(item) != 'object' && !objects.includes(item)
+      ) || (
+        !objects.filter(o => objectsAreEqual(o, item)).length)
+      ){
+        objects.push(item)
+      }
+    })
+    return objects
+  }
+)
 
 function mergeArrays(arrays){
   return uniquify(flatten(arrays))
@@ -63,7 +112,18 @@ function mergeObjects(objects){
   return Object.assign({}, ...objects)
 }
 
-export function merge(...args){
-  return (Array.isArray(args[0])) ? mergeArrays(args) : mergeObjects(args)
-}
+export const merge = meta({
+  description: 'Merges either a spread of arrays or objects',
+  examples: [{
+    input: [ ['foo'], ['bar'] ],
+    output: ['foo', 'bar']
+  }, {
+    input: [ {foo: 'foo'}, {bar: 'bar'} ],
+    output: {foo: 'foo', bar: 'bar'}
+  }]
+})(
+  function merge(...args){
+    return (Array.isArray(args[0])) ? mergeArrays(args) : mergeObjects(args)
+  }
+)
 
