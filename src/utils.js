@@ -1,5 +1,15 @@
 import meta from './meta'
 
+export const keyValue = meta({
+  description: 'transforms a { key: value } object into a { key: key, value: value }',
+  examples: [{input: [{key: 'value'}], output: { key: 'key', value: 'value' }}]
+})(
+  function keyValue(obj){
+    let key = Object.keys(obj)[0]
+    return { key, value: obj[key] }
+  }
+)
+
 export const flatten = meta({
   description: 'flattens an array of arrays that are nested 1 deep',
   examples: [{
@@ -23,6 +33,9 @@ export const arrayify = meta({
     output: ['foo']
   }, {
     input: [ undefined ],
+    output: []
+  },  {
+    input: [],
     output: []
   }]
 })(
@@ -108,9 +121,17 @@ function mergeArrays(arrays){
   return uniquify(flatten(arrays))
 }
 
-function mergeObjects(objects){
-  return Object.assign({}, ...objects)
-}
+const mergeObjects = meta({
+  description: 'Merges array of objects',
+  examples: [{
+    input: [[ {foo: 'foo'}, {bar: 'bar'} ]],
+    output: {foo: 'foo', bar: 'bar'}
+  }]
+})(
+  function mergeObjects(objects){
+    return Object.assign({}, ...objects)
+  }
+)
 
 export const merge = meta({
   description: 'Merges either a spread of arrays or objects',
