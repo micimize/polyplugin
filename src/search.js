@@ -15,6 +15,19 @@ const pathKeywords = {
       ...arrayify(star),
       ...arrayify(value).map( child => search({ data, path: [...arrayify(child), ...path]}))
     ]
+  },
+  resolve({data, value: resolver, path}){
+    return search({data, path}).map(resolver)
+  },
+  '*': ({data, value = [], path}) => {
+    path = [...value, ...path]
+    if(Array.isArray(data)){
+      return flatten(data.map(child => search({ data: child, path })))
+    } else if (data instanceof Object) {
+      return flatten(Object.keys(data).map(key => search({ data: data[key], path })))
+    } else {
+      return search({ data, path })
+    }
   }
 }
 
@@ -22,6 +35,9 @@ function pathKeyword({ data, node, path }){
   if(node instanceof Object){
     let { key, value } = keyValue(node)
     return pathKeywords[key]({data, value, path})
+  }
+  if(['*'].includes(node)){
+    return pathKeywords[node]({data, path})
   }
 }
 
@@ -85,5 +101,11 @@ export default meta({
   }, {
     input: [{ data, path: ['child', {'or': ['str', 'num', 'nestedObj']}]}],
     output: ['top star', 'child star', 'child string', 5.55, {nested: 'obj'}]
+  }, {
+    input: [{ data, path: ['child', { resolve: node => `${node}!` }, {or: ['str', 'num', ['nestedArr', 1]]}]}],
+    output: ['top star', 'child star!', 'child string!', '5.55!', 'nested array!']
+  }, {
+    input: [{ data, path: ['child', '*']}],
+    output: ['top star', 'child star', 'child rest', false, 'child string', 5.55, 0, 'nested array', {nested:'obj'}]
   }]
 })( search )
